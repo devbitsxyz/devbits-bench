@@ -1,0 +1,14 @@
+# Generated benchmark reports
+devbits-ollama-bench-*.md
+devbits-ollama-bench-*.json
+
+# Python
+__pycache__/
+*.py[cod]
+
+# macOS
+.DS_Store
+
+# Editors / local tooling
+.idea/
+.vscode/
