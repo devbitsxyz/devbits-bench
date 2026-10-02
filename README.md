@@ -6,6 +6,8 @@ Devbits Ollama Bench focuses on the things that matter when you actually use a l
 
 It is a single Python file, uses only the standard library, and talks directly to your local Ollama API. It does **not** download models automatically.
 
+![Devbits Ollama Bench running the Practical benchmark](imgs/ollama-bench-practical.webp)
+
 ## What you get
 
 - **Quick** — a fast, repeatable baseline with cold, warmup, and measured runs.
