@@ -1,138 +1,124 @@
-# Devbits Ollama Bench
+# Devbits Bench
 
-A small, dependency-free CLI for benchmarking local Ollama models without turning the process into a spreadsheet project.
+Practical benchmarking for local AI models and inference engines.
 
-Devbits Ollama Bench focuses on the things that matter when you actually use a local model: **time to first token, prompt processing, decode speed, context size, consistency, and memory pressure**. It provides a few opinionated benchmark modes for quick checks, everyday workloads, and large-context testing, then writes the results to Markdown and JSON so you can keep or compare them later.
+**Status:** `0.2.0-dev`, engine-neutral refactor in progress. Ollama is the only
+implemented runtime. Native MLX-LM is planned after its execution and measurement
+semantics are qualified; llama.cpp is a later candidate.
 
-It is a single Python file, uses only the standard library, and talks directly to your local Ollama API. It does **not** download models automatically.
+The project began as Devbits Ollama Bench. Its new name reflects the goal of
+comparing hardware, model, weight representation, inference engine, context, and
+workload using reproducible protocols.
 
-![Devbits Ollama Bench running the Practical benchmark](imgs/ollama-bench-practical.webp)
+## Run
 
-## What you get
-
-- **Quick** — a fast, repeatable baseline with cold, warmup, and measured runs.
-- **Practical** — isolated 4K, 8K, 16K, and 32K interactions for a more realistic view of everyday context performance.
-- **Stress** — pushes context toward the configured limit with isolated integrity and decode workloads, while watching for memory pressure.
-- **Custom** — lets you choose your own context windows and workload sizes; each workload is one isolated interaction.
-- **Thinking control** — use the thinking level supported by the selected model.
-- **Hardware-aware output** — reports the detected machine and memory information available on the platform.
-- **Reproducible reports** — every completed run writes both Markdown and JSON results.
-- **Built-in UI demos** — preview the terminal experience without making Ollama inference requests.
-
-## Requirements
-
-- Python 3
-- Ollama installed and available as `ollama`
-- A local Ollama model to benchmark
-- Ollama's local API available at `http://localhost:11434`
-
-No Python packages need to be installed.
-
-## Run it
-
-Make the script executable:
+Python 3.10 or newer is required. Run from the source tree:
 
 ```bash
-chmod +x devbits-ollama-bench
+./devbits-bench
 ```
 
-Then launch the interactive flow:
+Or use the package directly:
 
 ```bash
-./devbits-ollama-bench
+PYTHONPATH=src python -m devbits_bench
 ```
 
-Choose a benchmark mode, select one or more local models, choose the context/thinking options when applicable, and the benchmark will guide you from there.
-
-You can also select the same modes directly with flags:
+For real benchmarks, install Ollama, run its service, and make the selected models
+available locally. The interactive CLI offers Quick, Practical, Stress, and
+Custom modes. For example, replacing `MODEL_NAME` with your installed model:
 
 ```bash
-./devbits-ollama-bench --mode quick
-./devbits-ollama-bench --mode practical
-./devbits-ollama-bench --mode stress
-./devbits-ollama-bench --mode custom
+./devbits-bench --mode quick --models MODEL_NAME --thinking false
 ```
 
-Run `./devbits-ollama-bench --help` for the complete option list, or `./devbits-ollama-bench --version` to print the release version.
-
-## Custom workloads
-
-Custom mode is useful when you want to answer a specific question such as, “How does this model behave around 64K or 128K on my machine?”
+Use `--help` for options. To preview the terminal interface with synthetic results
+without running inference:
 
 ```bash
-./devbits-ollama-bench --mode custom --models my-model --contexts 64k,128k --thinking medium
+./devbits-bench --demo quick --no-ansi
 ```
 
-By default, Custom targets roughly **90% of each selected context window**, leaving 10% headroom. You can provide an explicit target with `--fill`:
+## Install
 
 ```bash
-./devbits-ollama-bench --mode custom --models my-model --contexts 128k --fill 96k --thinking medium
+python -m pip install -e .
+devbits-bench
 ```
 
-Large contexts can consume substantial memory and take a long time to prefill. The CLI shows an advisory before potentially expensive runs and does not silently lower the context you requested.
-
-## Preview the UI without benchmarking
-
-The demo mode is handy for seeing how a run behaves without waiting for inference:
+Core and Ollama support have no third-party Python dependencies. The existing
+optional extra can install MLX-LM:
 
 ```bash
-./devbits-ollama-bench --demo quick
-./devbits-ollama-bench --demo practical
-./devbits-ollama-bench --demo stress
-./devbits-ollama-bench --demo custom
+python -m pip install -e '.[mlx]'
 ```
 
-For screenshot-friendly playback:
+**Native MLX-LM execution is not implemented.** Installing that extra does not
+add an engine choice, and Ollama users do not need it.
 
-```bash
-./devbits-ollama-bench --demo stress-pressure --demo-speed step
-```
+## Protocols and compatibility
 
-`--demo-speed` accepts `normal`, `slow`, or `step`. Demo mode does not make Ollama inference requests.
-
-## Understanding the results
-
-The main measurements are intentionally straightforward:
-
-| Metric | Meaning |
+| Mode | Workload |
 | --- | --- |
-| **TTFT** | Time to first generated token. |
-| **Prompt** | Prompt/prefill processing speed in tokens per second. |
-| **Decode** | Generated-output speed in tokens per second. |
-| **Context / CTX** | Configured maximum context window. |
-| **Fill** | Approximate synthetic occupied-context target. |
-| **Load** | Model load/setup time reported by Ollama. |
-| **Total** | End-to-end request duration. |
+| Quick | One cold baseline, one discarded warmup, and three measured warm trials; 256-token output cap. |
+| Practical | Isolated 4K, 8K, 16K, and 32K targets that fit below the configured context; 512-token output cap. |
+| Stress | Quick calibration followed by 25%, 50%, 75%, and 90% context targets, each with separate integrity and decode requests. |
+| Custom | One isolated Practical-style interaction per chosen context/target; 90% fill by default and a 512-token output cap. |
 
-Memory snapshots are taken around benchmark requests where applicable. On macOS, free memory by itself is only part of the story, so the report also uses swap and compressed-memory information to make pressure easier to spot.
+Context targets are approximate workload sizes. Reports distinguish requested
+fill from the actual engine-reported prompt count. Ollama cold/isolation resets
+unload all running models; warm Quick trials reuse the resident model. Host
+memory is sampled before and after requests rather than continuously.
 
-## Reports
+Pass 4 separates engine-neutral requests/results and protocol runners while
+preserving deterministic corpus bytes, schedules, output budgets, timing
+calculations, pressure behavior, and the historical JSON schema. Engine-native
+and client-observed measurements remain distinct inside the adapter contract;
+new provenance fields are not added to compatibility JSON in this pass.
 
-Completed benchmarks write timestamped files in the current directory:
+Some older presentation limitations are intentionally retained: Practical and
+Stress Markdown use the Quick report template, Custom Markdown still describes
+synthetic fill and a 256-token cap, and Quick summaries combine selected models.
+See [known limitations](ARCHITECTURE.md#known-preexisting-limitations-deliberately-preserved)
+before interpreting those reports. Correcting these requires an explicit
+reporting or methodology change.
+
+## Development structure
 
 ```text
-devbits-ollama-bench-YYYYMMDD-HHMMSS.md
-devbits-ollama-bench-YYYYMMDD-HHMMSS.json
+src/devbits_bench/
+├── cli.py                  # engine composition
+├── legacy.py               # interactive shell, tables, Markdown, demos
+├── benchmark/
+│   ├── constants.py        # versioned methodology
+│   ├── models.py           # historical Result and statistics
+│   ├── workloads.py        # deterministic corpora
+│   ├── common.py           # mapping, isolation, pressure
+│   ├── quick.py            # Quick runner
+│   └── context.py          # shared Practical / Stress / Custom runners
+├── engines/
+│   ├── base.py             # neutral runtime contract
+│   └── ollama.py           # Ollama implementation
+├── reporting/
+│   └── json_report.py      # compatibility JSON
+├── system/
+│   └── metrics.py          # host observations
+└── ui/
+    └── terminal.py         # progress and formatting
 ```
 
-The Markdown file is meant to be easy to read or share. The JSON file keeps the structured measurements for later analysis, comparisons, or tooling.
+Read [ARCHITECTURE.md](ARCHITECTURE.md) for the responsibility inventory, context
+and reasoning semantics, preserved limitations, and multi-engine roadmap.
 
-## A note on benchmark numbers
+Run automated checks with:
 
-Local-model performance depends on much more than the model name: hardware, quantization, runtime, configured context, thinking mode, memory pressure, caching, and workload shape can all change the result.
+```bash
+PYTHONPATH=src python -m unittest discover -s tests -v
+PYTHONPATH=src python -m compileall -q src tests
+```
 
-That is why Devbits Ollama Bench records the environment and tries to keep benchmark behavior explicit. The numbers are most useful when you compare runs with the same protocol and understand what changed between them.
-
-## Project
-
-Built by **Devbits** for people experimenting with local models and trying to answer the very practical question: *how well does this model actually run on my machine?*
-
-- Website: https://devbits.xyz
-- X: @devbits
-- Reddit: r/devbits
-
-Contributions, bug reports, and benchmark findings are welcome.
+Automated contract tests and UI demos do not replace live-engine qualification.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+MIT.

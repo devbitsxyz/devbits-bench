@@ -1,0 +1,1806 @@
+{
+  "quick": {
+    "results": [
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 32768,
+        "mode": "Cold",
+        "run": 1,
+        "thinking": "medium",
+        "requested_fill": 0,
+        "prompt_tokens": 1037,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 33,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 3.6,
+        "prompt_tps": 518.5,
+        "generation_tps": 33.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 79,
+          "free_percent": 79,
+          "swap_used_mb": 101,
+          "compressed_mb": 201,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 78,
+          "free_percent": 78,
+          "swap_used_mb": 102,
+          "compressed_mb": 202,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.1,
+        "answer_ttft_s": 0.2,
+        "client_total_s": 4.1,
+        "phase": "Cold",
+        "measured": true,
+        "isolated": false,
+        "stabilization_s": 0.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": null,
+        "benchmark_thinking": null,
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 32768,
+        "mode": "Warmup",
+        "run": 1,
+        "thinking": "medium",
+        "requested_fill": 0,
+        "prompt_tokens": 1074,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 34,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 3.7,
+        "prompt_tps": 537.0,
+        "generation_tps": 34.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 77,
+          "free_percent": 77,
+          "swap_used_mb": 103,
+          "compressed_mb": 203,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 76,
+          "free_percent": 76,
+          "swap_used_mb": 104,
+          "compressed_mb": 204,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.2,
+        "answer_ttft_s": 0.3,
+        "client_total_s": 4.2,
+        "phase": "Warmup",
+        "measured": false,
+        "isolated": false,
+        "stabilization_s": 0.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": null,
+        "benchmark_thinking": null,
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 32768,
+        "mode": "Measured",
+        "run": 1,
+        "thinking": "medium",
+        "requested_fill": 0,
+        "prompt_tokens": 1111,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 35,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 3.8,
+        "prompt_tps": 555.5,
+        "generation_tps": 35.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 75,
+          "free_percent": 75,
+          "swap_used_mb": 105,
+          "compressed_mb": 205,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 74,
+          "free_percent": 74,
+          "swap_used_mb": 106,
+          "compressed_mb": 206,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.3,
+        "answer_ttft_s": 0.4,
+        "client_total_s": 4.3,
+        "phase": "Measured",
+        "measured": true,
+        "isolated": false,
+        "stabilization_s": 0.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": null,
+        "benchmark_thinking": null,
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 32768,
+        "mode": "Measured",
+        "run": 2,
+        "thinking": "medium",
+        "requested_fill": 0,
+        "prompt_tokens": 1148,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 36,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 3.9,
+        "prompt_tps": 574.0,
+        "generation_tps": 36.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 73,
+          "free_percent": 73,
+          "swap_used_mb": 107,
+          "compressed_mb": 207,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 72,
+          "free_percent": 72,
+          "swap_used_mb": 108,
+          "compressed_mb": 208,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.4,
+        "answer_ttft_s": 0.5,
+        "client_total_s": 4.4,
+        "phase": "Measured",
+        "measured": true,
+        "isolated": false,
+        "stabilization_s": 0.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": null,
+        "benchmark_thinking": null,
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 32768,
+        "mode": "Measured",
+        "run": 3,
+        "thinking": "medium",
+        "requested_fill": 0,
+        "prompt_tokens": 1185,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 37,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 4.0,
+        "prompt_tps": 592.5,
+        "generation_tps": 37.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 71,
+          "free_percent": 71,
+          "swap_used_mb": 109,
+          "compressed_mb": 209,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 70,
+          "free_percent": 70,
+          "swap_used_mb": 110,
+          "compressed_mb": 210,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.5,
+        "answer_ttft_s": 0.6,
+        "client_total_s": 4.5,
+        "phase": "Measured",
+        "measured": true,
+        "isolated": false,
+        "stabilization_s": 0.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": null,
+        "benchmark_thinking": null,
+        "error": ""
+      }
+    ],
+    "trace": [
+      [
+        "reset"
+      ],
+      [
+        "memory",
+        1
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "ae96e2a6f9aed101911dfc08594e3770b0d76dfc3ecfbb0f630a5a3d8f540edb",
+          "prompt_length": 2495,
+          "max_output_tokens": 256,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        2
+      ],
+      [
+        "memory",
+        3
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "fe896b772cc6a87b3c2f969959595cfc484c04fbc98027b19005137a20d6729f",
+          "prompt_length": 2500,
+          "max_output_tokens": 256,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        4
+      ],
+      [
+        "memory",
+        5
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "284cf0171d8f6047e4b0ffbeb595c69183a87b629eddd9dd0cffb67696ba3195",
+          "prompt_length": 2499,
+          "max_output_tokens": 256,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        6
+      ],
+      [
+        "memory",
+        7
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "ab9c719cb370bf245abad839156feab3f266684143a65bff5124d567297ba54f",
+          "prompt_length": 2492,
+          "max_output_tokens": 256,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        8
+      ],
+      [
+        "memory",
+        9
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "8cb2e19a7edc0a1e497b2e233c3b7025d2e9661bd2c2f1e2e2ef01c489f0dfb0",
+          "prompt_length": 2484,
+          "max_output_tokens": 256,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        10
+      ]
+    ]
+  },
+  "practical": {
+    "results": [
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 16385,
+        "mode": "Practical",
+        "run": 1,
+        "thinking": "medium",
+        "requested_fill": 4096,
+        "prompt_tokens": 1037,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 33,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 3.6,
+        "prompt_tps": 518.5,
+        "generation_tps": 33.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 78,
+          "free_percent": 78,
+          "swap_used_mb": 102,
+          "compressed_mb": 202,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 77,
+          "free_percent": 77,
+          "swap_used_mb": 103,
+          "compressed_mb": 203,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.1,
+        "answer_ttft_s": 0.2,
+        "client_total_s": 4.1,
+        "phase": "Practical",
+        "measured": true,
+        "isolated": true,
+        "stabilization_s": 3.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": {
+          "platform": "darwin",
+          "available_percent": 79,
+          "free_percent": 79,
+          "swap_used_mb": 101,
+          "compressed_mb": 201,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "benchmark_thinking": "medium",
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 16385,
+        "mode": "Practical",
+        "run": 2,
+        "thinking": "medium",
+        "requested_fill": 8192,
+        "prompt_tokens": 1074,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 34,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 3.7,
+        "prompt_tps": 537.0,
+        "generation_tps": 34.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 76,
+          "free_percent": 76,
+          "swap_used_mb": 104,
+          "compressed_mb": 204,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 75,
+          "free_percent": 75,
+          "swap_used_mb": 105,
+          "compressed_mb": 205,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.2,
+        "answer_ttft_s": 0.3,
+        "client_total_s": 4.2,
+        "phase": "Practical",
+        "measured": true,
+        "isolated": true,
+        "stabilization_s": 3.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": {
+          "platform": "darwin",
+          "available_percent": 79,
+          "free_percent": 79,
+          "swap_used_mb": 101,
+          "compressed_mb": 201,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "benchmark_thinking": "medium",
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 16385,
+        "mode": "Practical",
+        "run": 3,
+        "thinking": "medium",
+        "requested_fill": 16384,
+        "prompt_tokens": 1111,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 35,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 3.8,
+        "prompt_tps": 555.5,
+        "generation_tps": 35.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 74,
+          "free_percent": 74,
+          "swap_used_mb": 106,
+          "compressed_mb": 206,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 73,
+          "free_percent": 73,
+          "swap_used_mb": 107,
+          "compressed_mb": 207,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.3,
+        "answer_ttft_s": 0.4,
+        "client_total_s": 4.3,
+        "phase": "Practical",
+        "measured": true,
+        "isolated": true,
+        "stabilization_s": 3.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": {
+          "platform": "darwin",
+          "available_percent": 79,
+          "free_percent": 79,
+          "swap_used_mb": 101,
+          "compressed_mb": 201,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "benchmark_thinking": "medium",
+        "error": ""
+      }
+    ],
+    "trace": [
+      [
+        "memory",
+        1
+      ],
+      [
+        "reset"
+      ],
+      [
+        "sleep",
+        3.0
+      ],
+      [
+        "memory",
+        2
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "6a5a1baac906eb14ef9375ebf6bc9730ba172d3625f464046ddafb29811c22e0",
+          "prompt_length": 16759,
+          "max_output_tokens": 512,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        3
+      ],
+      [
+        "reset"
+      ],
+      [
+        "sleep",
+        3.0
+      ],
+      [
+        "memory",
+        4
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "a9a74cf5a1e8481a02f8bdebfa40ef6b7ed5f643d8cdc5a4fefc7c2598e439df",
+          "prompt_length": 33173,
+          "max_output_tokens": 512,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        5
+      ],
+      [
+        "reset"
+      ],
+      [
+        "sleep",
+        3.0
+      ],
+      [
+        "memory",
+        6
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "32922d681500b95228144934948be1b77ba12fa96cfb327cb90ffdad1d467d55",
+          "prompt_length": 66045,
+          "max_output_tokens": 512,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        7
+      ]
+    ]
+  },
+  "stress": {
+    "results": [
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 8192,
+        "mode": "Cold",
+        "run": 1,
+        "thinking": "medium",
+        "requested_fill": 0,
+        "prompt_tokens": 1037,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 33,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 3.6,
+        "prompt_tps": 518.5,
+        "generation_tps": 33.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 78,
+          "free_percent": 78,
+          "swap_used_mb": 102,
+          "compressed_mb": 202,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 77,
+          "free_percent": 77,
+          "swap_used_mb": 103,
+          "compressed_mb": 203,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.1,
+        "answer_ttft_s": 0.2,
+        "client_total_s": 4.1,
+        "phase": "Cold",
+        "measured": true,
+        "isolated": false,
+        "stabilization_s": 0.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": null,
+        "benchmark_thinking": null,
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 8192,
+        "mode": "Warmup",
+        "run": 1,
+        "thinking": "medium",
+        "requested_fill": 0,
+        "prompt_tokens": 1074,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 34,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 3.7,
+        "prompt_tps": 537.0,
+        "generation_tps": 34.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 76,
+          "free_percent": 76,
+          "swap_used_mb": 104,
+          "compressed_mb": 204,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 75,
+          "free_percent": 75,
+          "swap_used_mb": 105,
+          "compressed_mb": 205,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.2,
+        "answer_ttft_s": 0.3,
+        "client_total_s": 4.2,
+        "phase": "Warmup",
+        "measured": false,
+        "isolated": false,
+        "stabilization_s": 0.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": null,
+        "benchmark_thinking": null,
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 8192,
+        "mode": "Measured",
+        "run": 1,
+        "thinking": "medium",
+        "requested_fill": 0,
+        "prompt_tokens": 1111,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 35,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 3.8,
+        "prompt_tps": 555.5,
+        "generation_tps": 35.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 74,
+          "free_percent": 74,
+          "swap_used_mb": 106,
+          "compressed_mb": 206,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 73,
+          "free_percent": 73,
+          "swap_used_mb": 107,
+          "compressed_mb": 207,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.3,
+        "answer_ttft_s": 0.4,
+        "client_total_s": 4.3,
+        "phase": "Measured",
+        "measured": true,
+        "isolated": false,
+        "stabilization_s": 0.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": null,
+        "benchmark_thinking": null,
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 8192,
+        "mode": "Measured",
+        "run": 2,
+        "thinking": "medium",
+        "requested_fill": 0,
+        "prompt_tokens": 1148,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 36,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 3.9,
+        "prompt_tps": 574.0,
+        "generation_tps": 36.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 72,
+          "free_percent": 72,
+          "swap_used_mb": 108,
+          "compressed_mb": 208,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 71,
+          "free_percent": 71,
+          "swap_used_mb": 109,
+          "compressed_mb": 209,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.4,
+        "answer_ttft_s": 0.5,
+        "client_total_s": 4.4,
+        "phase": "Measured",
+        "measured": true,
+        "isolated": false,
+        "stabilization_s": 0.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": null,
+        "benchmark_thinking": null,
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 8192,
+        "mode": "Measured",
+        "run": 3,
+        "thinking": "medium",
+        "requested_fill": 0,
+        "prompt_tokens": 1185,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 37,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 4.0,
+        "prompt_tps": 592.5,
+        "generation_tps": 37.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 70,
+          "free_percent": 70,
+          "swap_used_mb": 110,
+          "compressed_mb": 210,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 69,
+          "free_percent": 69,
+          "swap_used_mb": 111,
+          "compressed_mb": 211,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.5,
+        "answer_ttft_s": 0.6,
+        "client_total_s": 4.5,
+        "phase": "Measured",
+        "measured": true,
+        "isolated": false,
+        "stabilization_s": 0.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": null,
+        "benchmark_thinking": null,
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 8192,
+        "mode": "Long Prefill",
+        "run": 101,
+        "thinking": "false",
+        "requested_fill": 2048,
+        "prompt_tokens": 1222,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 38,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 4.1,
+        "prompt_tps": 611.0,
+        "generation_tps": 38.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 68,
+          "free_percent": 68,
+          "swap_used_mb": 112,
+          "compressed_mb": 212,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 67,
+          "free_percent": 67,
+          "swap_used_mb": 113,
+          "compressed_mb": 213,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.6,
+        "answer_ttft_s": 0.7,
+        "client_total_s": 4.6,
+        "phase": "Long Prefill",
+        "measured": true,
+        "isolated": true,
+        "stabilization_s": 3.0,
+        "checkpoint_pass": true,
+        "checkpoint_hits": 4,
+        "checkpoint_total": 4,
+        "suite_memory_start": {
+          "platform": "darwin",
+          "available_percent": 79,
+          "free_percent": 79,
+          "swap_used_mb": 101,
+          "compressed_mb": 201,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "benchmark_thinking": "medium",
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 8192,
+        "mode": "Long Decode",
+        "run": 201,
+        "thinking": "medium",
+        "requested_fill": 2048,
+        "prompt_tokens": 1259,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 39,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 4.2,
+        "prompt_tps": 629.5,
+        "generation_tps": 39.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 66,
+          "free_percent": 66,
+          "swap_used_mb": 114,
+          "compressed_mb": 214,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 65,
+          "free_percent": 65,
+          "swap_used_mb": 115,
+          "compressed_mb": 215,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.7,
+        "answer_ttft_s": 0.8,
+        "client_total_s": 4.7,
+        "phase": "Long Decode",
+        "measured": true,
+        "isolated": true,
+        "stabilization_s": 3.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": {
+          "platform": "darwin",
+          "available_percent": 79,
+          "free_percent": 79,
+          "swap_used_mb": 101,
+          "compressed_mb": 201,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "benchmark_thinking": "medium",
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 8192,
+        "mode": "Long Prefill",
+        "run": 102,
+        "thinking": "false",
+        "requested_fill": 4096,
+        "prompt_tokens": 1296,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 40,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 4.3,
+        "prompt_tps": 648.0,
+        "generation_tps": 40.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 64,
+          "free_percent": 64,
+          "swap_used_mb": 116,
+          "compressed_mb": 216,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 63,
+          "free_percent": 63,
+          "swap_used_mb": 117,
+          "compressed_mb": 217,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.8,
+        "answer_ttft_s": 0.9,
+        "client_total_s": 4.8,
+        "phase": "Long Prefill",
+        "measured": true,
+        "isolated": true,
+        "stabilization_s": 3.0,
+        "checkpoint_pass": true,
+        "checkpoint_hits": 4,
+        "checkpoint_total": 4,
+        "suite_memory_start": {
+          "platform": "darwin",
+          "available_percent": 79,
+          "free_percent": 79,
+          "swap_used_mb": 101,
+          "compressed_mb": 201,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "benchmark_thinking": "medium",
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 8192,
+        "mode": "Long Decode",
+        "run": 202,
+        "thinking": "medium",
+        "requested_fill": 4096,
+        "prompt_tokens": 1333,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 41,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 4.4,
+        "prompt_tps": 666.5,
+        "generation_tps": 41.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 62,
+          "free_percent": 62,
+          "swap_used_mb": 118,
+          "compressed_mb": 218,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 61,
+          "free_percent": 61,
+          "swap_used_mb": 119,
+          "compressed_mb": 219,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.9,
+        "answer_ttft_s": 1.0,
+        "client_total_s": 4.9,
+        "phase": "Long Decode",
+        "measured": true,
+        "isolated": true,
+        "stabilization_s": 3.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": {
+          "platform": "darwin",
+          "available_percent": 79,
+          "free_percent": 79,
+          "swap_used_mb": 101,
+          "compressed_mb": 201,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "benchmark_thinking": "medium",
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 8192,
+        "mode": "Long Prefill",
+        "run": 103,
+        "thinking": "false",
+        "requested_fill": 6144,
+        "prompt_tokens": 1370,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 42,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 4.5,
+        "prompt_tps": 685.0,
+        "generation_tps": 42.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 60,
+          "free_percent": 60,
+          "swap_used_mb": 120,
+          "compressed_mb": 220,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 59,
+          "free_percent": 59,
+          "swap_used_mb": 121,
+          "compressed_mb": 221,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 1.0,
+        "answer_ttft_s": 1.1,
+        "client_total_s": 5.0,
+        "phase": "Long Prefill",
+        "measured": true,
+        "isolated": true,
+        "stabilization_s": 3.0,
+        "checkpoint_pass": true,
+        "checkpoint_hits": 4,
+        "checkpoint_total": 4,
+        "suite_memory_start": {
+          "platform": "darwin",
+          "available_percent": 79,
+          "free_percent": 79,
+          "swap_used_mb": 101,
+          "compressed_mb": 201,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "benchmark_thinking": "medium",
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 8192,
+        "mode": "Long Decode",
+        "run": 203,
+        "thinking": "medium",
+        "requested_fill": 6144,
+        "prompt_tokens": 1407,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 43,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 4.6,
+        "prompt_tps": 703.5,
+        "generation_tps": 43.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 58,
+          "free_percent": 58,
+          "swap_used_mb": 122,
+          "compressed_mb": 222,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 57,
+          "free_percent": 57,
+          "swap_used_mb": 123,
+          "compressed_mb": 223,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 1.1,
+        "answer_ttft_s": 1.2,
+        "client_total_s": 5.1,
+        "phase": "Long Decode",
+        "measured": true,
+        "isolated": true,
+        "stabilization_s": 3.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": {
+          "platform": "darwin",
+          "available_percent": 79,
+          "free_percent": 79,
+          "swap_used_mb": 101,
+          "compressed_mb": 201,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "benchmark_thinking": "medium",
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 8192,
+        "mode": "Long Prefill",
+        "run": 104,
+        "thinking": "false",
+        "requested_fill": 7372,
+        "prompt_tokens": 1444,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 44,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 4.7,
+        "prompt_tps": 722.0,
+        "generation_tps": 44.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 56,
+          "free_percent": 56,
+          "swap_used_mb": 124,
+          "compressed_mb": 224,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 55,
+          "free_percent": 55,
+          "swap_used_mb": 125,
+          "compressed_mb": 225,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 1.2,
+        "answer_ttft_s": 1.3,
+        "client_total_s": 5.2,
+        "phase": "Long Prefill",
+        "measured": true,
+        "isolated": true,
+        "stabilization_s": 3.0,
+        "checkpoint_pass": true,
+        "checkpoint_hits": 4,
+        "checkpoint_total": 4,
+        "suite_memory_start": {
+          "platform": "darwin",
+          "available_percent": 79,
+          "free_percent": 79,
+          "swap_used_mb": 101,
+          "compressed_mb": 201,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "benchmark_thinking": "medium",
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 8192,
+        "mode": "Long Decode",
+        "run": 204,
+        "thinking": "medium",
+        "requested_fill": 7372,
+        "prompt_tokens": 1481,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 45,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 4.8,
+        "prompt_tps": 740.5,
+        "generation_tps": 45.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 54,
+          "free_percent": 54,
+          "swap_used_mb": 126,
+          "compressed_mb": 226,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 53,
+          "free_percent": 53,
+          "swap_used_mb": 127,
+          "compressed_mb": 227,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 1.3,
+        "answer_ttft_s": 1.4,
+        "client_total_s": 5.3,
+        "phase": "Long Decode",
+        "measured": true,
+        "isolated": true,
+        "stabilization_s": 3.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": {
+          "platform": "darwin",
+          "available_percent": 79,
+          "free_percent": 79,
+          "swap_used_mb": 101,
+          "compressed_mb": 201,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "benchmark_thinking": "medium",
+        "error": ""
+      }
+    ],
+    "trace": [
+      [
+        "memory",
+        1
+      ],
+      [
+        "reset"
+      ],
+      [
+        "memory",
+        2
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "ae96e2a6f9aed101911dfc08594e3770b0d76dfc3ecfbb0f630a5a3d8f540edb",
+          "prompt_length": 2495,
+          "max_output_tokens": 256,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        3
+      ],
+      [
+        "memory",
+        4
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "fe896b772cc6a87b3c2f969959595cfc484c04fbc98027b19005137a20d6729f",
+          "prompt_length": 2500,
+          "max_output_tokens": 256,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        5
+      ],
+      [
+        "memory",
+        6
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "284cf0171d8f6047e4b0ffbeb595c69183a87b629eddd9dd0cffb67696ba3195",
+          "prompt_length": 2499,
+          "max_output_tokens": 256,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        7
+      ],
+      [
+        "memory",
+        8
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "ab9c719cb370bf245abad839156feab3f266684143a65bff5124d567297ba54f",
+          "prompt_length": 2492,
+          "max_output_tokens": 256,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        9
+      ],
+      [
+        "memory",
+        10
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "8cb2e19a7edc0a1e497b2e233c3b7025d2e9661bd2c2f1e2e2ef01c489f0dfb0",
+          "prompt_length": 2484,
+          "max_output_tokens": 256,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        11
+      ],
+      [
+        "reset"
+      ],
+      [
+        "sleep",
+        3.0
+      ],
+      [
+        "memory",
+        12
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "0f5d8509d930b952e51cf61b62161746a85459d3b478cf75d2f3edffd587dc3a",
+          "prompt_length": 8467,
+          "max_output_tokens": 64,
+          "reasoning": "false",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        13
+      ],
+      [
+        "reset"
+      ],
+      [
+        "sleep",
+        3.0
+      ],
+      [
+        "memory",
+        14
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "c88e2232807d524f1adb002f5898593bf73296f52a89796b8e2798bfa2c1fbc4",
+          "prompt_length": 8462,
+          "max_output_tokens": 256,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        15
+      ],
+      [
+        "reset"
+      ],
+      [
+        "sleep",
+        3.0
+      ],
+      [
+        "memory",
+        16
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "475ccb59b56176dac3def13e5de289308aa440f3039d8911b6de6f9d5e920b7c",
+          "prompt_length": 16695,
+          "max_output_tokens": 64,
+          "reasoning": "false",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        17
+      ],
+      [
+        "reset"
+      ],
+      [
+        "sleep",
+        3.0
+      ],
+      [
+        "memory",
+        18
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "3fd2c5f782e0e2ff930619276f8aa83f52548b465760db6ad2f9629bb7d95966",
+          "prompt_length": 16703,
+          "max_output_tokens": 256,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        19
+      ],
+      [
+        "reset"
+      ],
+      [
+        "sleep",
+        3.0
+      ],
+      [
+        "memory",
+        20
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "2a342101744e721be12803d356eb964dc6a6aa845cde01be511519d01dffd1a1",
+          "prompt_length": 24931,
+          "max_output_tokens": 64,
+          "reasoning": "false",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        21
+      ],
+      [
+        "reset"
+      ],
+      [
+        "sleep",
+        3.0
+      ],
+      [
+        "memory",
+        22
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "77f40fe563be95cf8c78e62a08893cbe2f903316e233d51ae5e85de103fea7d9",
+          "prompt_length": 24909,
+          "max_output_tokens": 256,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        23
+      ],
+      [
+        "reset"
+      ],
+      [
+        "sleep",
+        3.0
+      ],
+      [
+        "memory",
+        24
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "3a9a9e862ddd982e584b037a59059417007b887ec9c6b8e2eb569cda20106319",
+          "prompt_length": 29767,
+          "max_output_tokens": 64,
+          "reasoning": "false",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        25
+      ],
+      [
+        "reset"
+      ],
+      [
+        "sleep",
+        3.0
+      ],
+      [
+        "memory",
+        26
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "1b40ae3d1b9f716d5c66903f53341844082b90792e26ac91f68199ecb36e229b",
+          "prompt_length": 29757,
+          "max_output_tokens": 256,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        27
+      ]
+    ]
+  },
+  "custom": {
+    "results": [
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared",
+        "context": 8192,
+        "mode": "Custom",
+        "run": 1,
+        "thinking": "medium",
+        "requested_fill": 4096,
+        "prompt_tokens": 1037,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 33,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 3.6,
+        "prompt_tps": 518.5,
+        "generation_tps": 33.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 79,
+          "free_percent": 79,
+          "swap_used_mb": 101,
+          "compressed_mb": 201,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 78,
+          "free_percent": 78,
+          "swap_used_mb": 102,
+          "compressed_mb": 202,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.1,
+        "answer_ttft_s": 0.2,
+        "client_total_s": 4.1,
+        "phase": "Custom",
+        "measured": true,
+        "isolated": true,
+        "stabilization_s": 3.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": null,
+        "benchmark_thinking": "medium",
+        "error": ""
+      },
+      {
+        "base_model": "fixture-model",
+        "model": "fixture-prepared-2",
+        "context": 16384,
+        "mode": "Custom",
+        "run": 2,
+        "thinking": "medium",
+        "requested_fill": 8192,
+        "prompt_tokens": 1074,
+        "cached_prompt_tokens": 0,
+        "output_tokens": 34,
+        "load_s": 0.125,
+        "prompt_s": 2.0,
+        "total_s": 3.7,
+        "prompt_tps": 537.0,
+        "generation_tps": 34.0,
+        "memory_before": {
+          "platform": "darwin",
+          "available_percent": 77,
+          "free_percent": 77,
+          "swap_used_mb": 103,
+          "compressed_mb": 203,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "memory_after": {
+          "platform": "darwin",
+          "available_percent": 76,
+          "free_percent": 76,
+          "swap_used_mb": 104,
+          "compressed_mb": 204,
+          "psi_memory_some_avg10": null,
+          "psi_memory_full_avg10": null
+        },
+        "ttft_s": 0.2,
+        "answer_ttft_s": 0.3,
+        "client_total_s": 4.2,
+        "phase": "Custom",
+        "measured": true,
+        "isolated": true,
+        "stabilization_s": 3.0,
+        "checkpoint_pass": null,
+        "checkpoint_hits": 0,
+        "checkpoint_total": 0,
+        "suite_memory_start": null,
+        "benchmark_thinking": "medium",
+        "error": ""
+      }
+    ],
+    "trace": [
+      [
+        "reset"
+      ],
+      [
+        "sleep",
+        3.0
+      ],
+      [
+        "memory",
+        1
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared",
+          "prompt_sha256": "6a5a1baac906eb14ef9375ebf6bc9730ba172d3625f464046ddafb29811c22e0",
+          "prompt_length": 16759,
+          "max_output_tokens": 512,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        2
+      ],
+      [
+        "reset"
+      ],
+      [
+        "sleep",
+        3.0
+      ],
+      [
+        "memory",
+        3
+      ],
+      [
+        "generate",
+        {
+          "model": "fixture-prepared-2",
+          "prompt_sha256": "a9a74cf5a1e8481a02f8bdebfa40ef6b7ed5f643d8cdc5a4fefc7c2598e439df",
+          "prompt_length": 33173,
+          "max_output_tokens": 512,
+          "reasoning": "medium",
+          "seed": 42,
+          "temperature": 0,
+          "stream": true
+        }
+      ],
+      [
+        "memory",
+        4
+      ]
+    ]
+  }
+}

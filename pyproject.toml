@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "devbits-bench"
+version = "0.2.0.dev0"
+description = "Practical benchmarking for local AI models and inference engines"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Devbits"}]
+dependencies = []
+
+[project.scripts]
+devbits-bench = "devbits_bench.cli:entrypoint"
+
+[project.optional-dependencies]
+mlx = ["mlx-lm"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

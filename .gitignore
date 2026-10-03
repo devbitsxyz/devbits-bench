@@ -1,14 +1,9 @@
-# Generated benchmark reports
-devbits-ollama-bench-*.md
-devbits-ollama-bench-*.json
-
-# Python
 __pycache__/
 *.py[cod]
-
-# macOS
+.venv/
+dist/
+build/
+*.egg-info/
+devbits-bench-*.json
+devbits-bench-*.md
 .DS_Store
-
-# Editors / local tooling
-.idea/
-.vscode/
