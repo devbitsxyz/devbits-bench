@@ -1,22 +1,55 @@
-"""Devbits Bench CLI.
-
-v0.2 structural pass: preserves the v0.1 benchmark methodology while moving
-runtime ownership behind an engine boundary. MLX-LM support is intentionally not
-implemented in this pass.
-"""
+"""Devbits Bench CLI composition root."""
 from __future__ import annotations
-from .engines import OllamaEngine
-from .engines.base import EngineNotReadyError
+
 from . import legacy
+from .engines.base import EngineNotReadyError
+from .engines.discovery import EngineState, discover_engines
+from .ui import terminal as ui
+from .ui.terminal import B, C, col
+
+
+def _select_engine(requested: str | None = None, assume_yes: bool = False):
+    engines = discover_engines(diagnostic=ui.ui_verbose)
+    if requested:
+        key = requested.strip().lower()
+        matches = [item for item in engines if key in (item.candidate.id.lower(), item.candidate.display_name.lower())]
+        if not matches:
+            raise SystemExit(f"engine is not available on this platform: {requested}")
+        selected = matches[0]
+        if selected.state is EngineState.READY:
+            return selected.engine
+        raise SystemExit(f"engine is not available: {requested}")
+
+    if not engines:
+        raise SystemExit("no supported benchmark engine is available")
+
+    print(col("Available engines", B))
+    print()
+    for index, item in enumerate(engines, 1):
+        detail = item.detail if item.detail else item.state.value
+        if item.state is EngineState.UNAVAILABLE:
+            detail = "Detected • not ready"
+        print(f"  {col(str(index).rjust(2), C)}  {item.candidate.display_name:<12} {detail}")
+    print()
+    raw = input("Select engine [1]: ").strip() or "1"
+    print()
+    try:
+        index = int(raw)
+    except ValueError:
+        raise SystemExit("Invalid engine selection") from None
+    if not 1 <= index <= len(engines):
+        raise SystemExit("Invalid engine selection")
+    selected = engines[index - 1]
+    if selected.state is EngineState.READY:
+        return selected.engine
+    if selected.detail:
+        raise SystemExit(selected.detail)
+    raise SystemExit(f"engine is not ready: {selected.candidate.display_name}")
 
 
 def main() -> None:
-    # v0.2-dev currently exposes the proven Ollama engine only. The package/engine
-    # contract must be qualified for MLX-LM before adding another adapter.
-    engine = OllamaEngine()
-    legacy.set_engine(engine)
     try:
-        legacy.main()
+        legacy.main(engine_selector=_select_engine)
     except EngineNotReadyError as exc:
         raise SystemExit(str(exc)) from None
 

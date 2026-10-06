@@ -3,7 +3,7 @@
 Changing these values can change benchmark comparability and should be treated as a
 protocol change rather than a routine refactor.
 """
-VERSION = "0.2.0-dev"
+VERSION = "0.2.0"
 PROTOCOL = "devbits-bench-v1"
 PRACTICAL_PROTOCOL = "devbits-practical-v1"
 CORPUS = "devbits-standard-context-v1"

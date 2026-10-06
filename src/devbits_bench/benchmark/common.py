@@ -7,6 +7,20 @@ from ..system.metrics import memory_snapshot
 from ..ui.terminal import C, D, col, ui_verbose
 
 
+def attach_generation_evidence(result, generation: GenerationResult):
+    """Attach report-only evidence without changing the historical Result dataclass.
+
+    Keeping this as dynamic sidecar data preserves the frozen runner/result fixtures
+    and Ollama compatibility schema while allowing multi-engine reports to expose
+    native and Devbits measurement provenance.
+    """
+    result._measurement_provenance = dict(generation.metrics.provenance)
+    result._native_metrics = dict(generation.native_metrics)
+    result._requested_reasoning = generation.requested_reasoning
+    result._effective_reasoning = generation.effective_reasoning
+    return result
+
+
 def result_fields(generation: GenerationResult):
     """Map normalized measurements to the historical Result schema.
 
@@ -24,9 +38,12 @@ def result_fields(generation: GenerationResult):
     return fields
 
 def stabilize_for_long_test(engine: Engine, prepared: PreparedModel, seconds=3.0):
- ui_verbose(col('  ❄ ',C)+'Resetting model state…')
- engine.reset(prepared)
- ui_verbose(col('  ◌ ',D)+f'Stabilizing for {seconds:.0f}s before measurement…')
+ # Long-context interactions must be prompt/KV isolated. Some engines (currently
+ # MLX-LM) guarantee that isolation per generate() while retaining model weights;
+ # others keep the historical reset-before-interaction behavior.
+ keeps_residency = getattr(engine, 'isolated_generation_keeps_residency', None)
+ if not (callable(keeps_residency) and keeps_residency()):
+  engine.reset(prepared)
  time.sleep(seconds)
  return memory_snapshot()
 

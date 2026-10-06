@@ -1,3 +1,4 @@
+.DS_Store
 __pycache__/
 *.py[cod]
 .venv/
@@ -6,4 +7,3 @@ build/
 *.egg-info/
 devbits-bench-*.json
 devbits-bench-*.md
-.DS_Store

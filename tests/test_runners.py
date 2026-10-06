@@ -347,5 +347,98 @@ class ReportCompatibilityTests(unittest.TestCase):
                     self.assertEqual(actual, expected["markdown"])
 
 
+class MultiEnginePresentationTests(unittest.TestCase):
+    def test_nvfp4_guide_is_engine_neutral(self):
+        row = Result(base_model='mlx-community/model', model='model', context=32768, mode='Measured', run=1,
+                     thinking='false', requested_fill=0, prompt_tokens=10, cached_prompt_tokens=0,
+                     output_tokens=5, load_s=0, prompt_s=1, total_s=2, prompt_tps=10,
+                     generation_tps=5, memory_before={}, memory_after={}, phase='Measured')
+        class MetadataEngine:
+            def inspect_model(self, model_id):
+                return ModelInfo('mlx-lm', model_id, model_id, quantization='NVFP4')
+        with patch.object(legacy, '_engine', return_value=MetadataEngine()):
+            text = '\n'.join(legacy.markdown_model_terms([row]))
+        self.assertIn('4-bit floating-point quantization', text)
+        self.assertNotIn('Ollama', text)
+
+
+    def test_quick_progress_block_keeps_historical_compact_geometry(self):
+        out = io.StringIO()
+        with redirect_stdout(out):
+            initial = terminal.quick_progress_block([], 0, 5)
+        initial_lines = out.getvalue().splitlines()
+        out = io.StringIO()
+        with redirect_stdout(out):
+            final = terminal.quick_progress_block([f"stage {i}" for i in range(5)], 5, 5)
+        final_lines = out.getvalue().splitlines()
+        self.assertEqual(initial, 2)
+        self.assertEqual(final, 7)
+        self.assertEqual(len(initial_lines), 2)
+        self.assertEqual(len(final_lines), 7)
+        self.assertIn('0/5', initial_lines[0])
+        self.assertIn('5/5', final_lines[0])
+
+    def test_quick_reuses_historical_clear_and_repaint_ownership(self):
+        engine = FakeEngine()
+        clears=[]
+        real_clear=quick.clear_terminal_lines
+        with observed_run(engine), patch.object(quick, 'clear_terminal_lines', side_effect=lambda n: clears.append(n)):
+            with redirect_stdout(io.StringIO()):
+                quick.quick_bench(engine, prepared(32768), 'false')
+        # One repaint after every completed stage. Geometry grows with completed
+        # rows exactly like the original Ollama Quick renderer: 2,3,4,5,6.
+        self.assertEqual(clears, [2, 3, 4, 5, 6])
+
+    def test_mlx_quick_report_methodology_is_engine_neutral(self):
+        row = Result(base_model='mlx-community/model', model='model', context=32768, mode='Measured', run=1,
+                     thinking='false', requested_fill=0, prompt_tokens=10, cached_prompt_tokens=0,
+                     output_tokens=5, load_s=0, prompt_s=1, total_s=2, prompt_tps=10,
+                     generation_tps=5, memory_before={}, memory_after={}, phase='Measured', measured=True,
+                     ttft_s=1.0, answer_ttft_s=1.0)
+        with patch.object(legacy, 'markdown_model_terms', return_value=[]):
+            text = legacy.quick_report({'machine':'m','chip':'c','memory':'1 GB','gpu':'g','os':'o'},
+                                       'mlx-lm 0.32.0 • mlx 0.32.3 • Metal', [row], 'MLX-LM')
+        self.assertIn('MLX-LM', text)
+        self.assertNotIn('Ollama prompt evaluation duration', text)
+        self.assertNotIn('Ollama output-token count', text)
+        self.assertIn('selected engine adapter', text)
+
+    def test_quick_verbose_emits_cold_warm_evidence(self):
+        engine = FakeEngine()
+        out = io.StringIO()
+        with observed_run(engine), patch.object(terminal, 'VERBOSE', True), redirect_stdout(out):
+            quick.quick_bench(engine, prepared(32768), 'false')
+        text = out.getvalue()
+        self.assertIn('Cold baseline evidence', text)
+        self.assertIn('Warmup evidence', text)
+        self.assertIn('Measured 3/3 evidence', text)
+        self.assertIn('cached_prompt_tokens=', text)
+        self.assertIn('fresh_prompt_cache=', text)
+
+
 if __name__ == "__main__":
     unittest.main()
+
+class MLXReportProvenancePresentationTests(unittest.TestCase):
+    def test_mlx_markdown_exposes_native_vs_devbits_provenance(self):
+        row = Result(base_model='mlx-community/model', model='model', context=32768, mode='Measured', run=1,
+                     thinking='medium', requested_fill=0, prompt_tokens=10, cached_prompt_tokens=0,
+                     output_tokens=5, load_s=0, prompt_s=1, total_s=2, prompt_tps=10,
+                     generation_tps=5, memory_before={}, memory_after={}, ttft_s=.5,
+                     answer_ttft_s=1.0, client_total_s=2.0, phase='Measured')
+        row._measurement_provenance={'prompt_tps':'mlx-lm native','generation_tps':'mlx-lm native',
+                                     'ttft_s':'devbits client monotonic','answer_ttft_s':'devbits client monotonic',
+                                     'prompt_s':'derived: native prompt_tokens / native prompt_tps'}
+        row._native_metrics={'peak_memory_gb':15.4,'finish_reason':'stop','fresh_prompt_cache':True}
+        row._requested_reasoning='medium'; row._effective_reasoning='medium'
+        class MetadataEngine:
+            def inspect_model(self, model_id):
+                return ModelInfo('mlx-lm',model_id,model_id,quantization='NVFP4')
+        with patch.object(legacy,'_engine',return_value=MetadataEngine()):
+            text=legacy.quick_report({'machine':'m','chip':'c','memory':'1 GB','gpu':'g','os':'o'},'mlx-lm 0.32.0 • mlx 0.32.3 • Metal',[row],'MLX-LM')
+        self.assertIn('## Measurement provenance',text)
+        self.assertIn('mlx-lm native',text)
+        self.assertIn('devbits client monotonic',text)
+        self.assertIn('15.400 GB',text)
+        self.assertIn('fresh prompt cache confirmed',text)
+        self.assertIn('requested medium; effective medium',text)

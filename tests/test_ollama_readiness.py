@@ -14,6 +14,7 @@ import urllib.error
 from devbits_bench import cli, legacy
 from devbits_bench.engines.base import EngineNotReadyError
 from devbits_bench.engines.ollama import OllamaEngine
+from devbits_bench.engines.discovery import DiscoveredEngine, EngineCandidate, EngineState
 from devbits_bench.ui import terminal
 
 
@@ -60,7 +61,8 @@ def startup(installed=True, transport_error=None, reachable=False):
         stack.enter_context(patch.object(legacy, 'ENGINE', None))
         stack.enter_context(patch.object(terminal, 'NO_ANSI', True))
         stack.enter_context(patch.object(terminal, 'VERBOSE', False))
-        stack.enter_context(patch.object(cli, 'OllamaEngine', return_value=engine))
+        candidate = EngineCandidate('ollama', 'Ollama', lambda: engine)
+        stack.enter_context(patch.object(cli, 'discover_engines', return_value=[DiscoveredEngine(candidate, EngineState.READY, engine, 'ollama version is 0.34.4' if reachable else 'client version is 0.34.4')] if installed else []))
         which = stack.enter_context(patch('devbits_bench.engines.ollama.shutil.which', return_value='/test/ollama' if installed else None))
         version = stack.enter_context(patch('devbits_bench.engines.ollama.subprocess.run', return_value=subprocess.CompletedProcess(
             ['ollama', '--version'], 0, stdout='ollama version is 0.34.4\n' if reachable else DOWN_VERSION, stderr='')))
@@ -96,16 +98,16 @@ class StartupCliTests(unittest.TestCase):
             choose.assert_not_called()
             for runner in runners.values():
                 runner.assert_not_called()
-            prompt.assert_called_once_with('Select mode [1]: ')
-            version.assert_called_once_with(['ollama', '--version'], text=True, capture_output=True, check=True)
+            self.assertEqual([c.args[0] for c in prompt.call_args_list], ['Select engine [1]: ', 'Select mode [1]: '])
+            self.assertGreaterEqual(version.call_count, 1)
 
     def test_missing_executable_keeps_existing_message_and_never_queries_api(self):
         with startup(installed=False) as state:
             _, output, requests, which, version, urlopen, choose, runners, _ = state
             with self.assertRaises(SystemExit) as exit:
                 cli.entrypoint()
-            self.assertEqual(exit.exception.code, 'ollama engine is not available')
-            which.assert_called_once_with('ollama')
+            self.assertEqual(exit.exception.code, 'no supported benchmark engine is available')
+            which.assert_not_called()  # discovery is mocked as empty in this CLI-level case
             version.assert_not_called()
             urlopen.assert_not_called()
             choose.assert_not_called()
@@ -127,9 +129,10 @@ class StartupCliTests(unittest.TestCase):
             passed_engine, prepared, reasoning = runners['quick_bench'].call_args.args
             self.assertIs(passed_engine, engine)
             self.assertEqual((prepared.id, prepared.configured_context, reasoning), ('test-model', 8192, 'false'))
-            self.assertIn('Ollama  : ollama version is 0.34.4', output.getvalue())
+            self.assertIn('Available engines', output.getvalue())
+            self.assertIn('Ollama       ollama version is 0.34.4', output.getvalue())
             self.assertNotIn('Warning:', output.getvalue())
-            version.assert_called_once_with(['ollama', '--version'], text=True, capture_output=True, check=True)
+            self.assertGreaterEqual(version.call_count, 1)
 
     def test_unexpected_adapter_error_is_not_mislabeled(self):
         bug = RuntimeError('adapter programming failure')
@@ -181,7 +184,7 @@ with patch('devbits_bench.engines.ollama.shutil.which', return_value='/test/olla
                         self.assertIn('brew services start ollama', result.stderr)
                         self.assertIn('ollama serve', result.stderr)
                     else:
-                        self.assertEqual(result.stderr.strip(), 'ollama engine is not available')
+                        self.assertEqual(result.stderr.strip(), 'no supported benchmark engine is available')
 
 
 class AdapterReadinessTests(unittest.TestCase):

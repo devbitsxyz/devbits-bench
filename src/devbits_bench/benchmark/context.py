@@ -5,7 +5,7 @@ import sys
 from .constants import CACHE_ACCEPT_RATIO, PRACTICAL_STAGES
 from .models import Result
 from .workloads import practical_corpus, long_corpus
-from .common import result_fields, stabilize_for_long_test, pressure_warning, pressure_policy_description
+from .common import result_fields, attach_generation_evidence, stabilize_for_long_test, pressure_warning, pressure_policy_description
 from ..engines.base import Engine, GenerationRequest, PreparedModel
 from ..system.metrics import memory_snapshot
 from ..ui import terminal as ui
@@ -31,8 +31,6 @@ Keep the complete response within the available output budget.
 """.strip()
 
  request = GenerationRequest(prompt=corpus + '\n\n' + instruction, max_output_tokens=512, reasoning=think)
- ui_verbose(f'  Generation • stream=true • target_input≈{target_tokens:,} • output_cap=512 • thinking={think}')
-
  with Spinner(f'Processing ~{target_tokens // 1024}K input…') as status:
   def on_event(event):
    if event=='request_sent':
@@ -69,6 +67,7 @@ Keep the complete response within the available output budget.
   checkpoint_total=0,
   benchmark_thinking=think,
  )
+ attach_generation_evidence(result, generation)
 
  cache_ratio = (cached / prompt_tokens) if prompt_tokens else 0.0
  if cache_ratio > CACHE_ACCEPT_RATIO:
@@ -87,18 +86,15 @@ def practical_bench(engine: Engine, prepared: PreparedModel, think):
  print(f'  4K → 8K → 16K → 32K • isolated interactions • thinking={think}')
  suite_start=memory_snapshot()
  ui_verbose(col('  i ',C)+f"Suite memory baseline captured ({suite_start.get('platform')}).")
- results=[]; completed_count=0; completed=[]; rendered_lines=0
+ results=[]; completed_count=0; completed=[]; verbose_evidence=[]
  print()
+ rendered_lines=quick_progress_block(completed,completed_count,len(PRACTICAL_STAGES))
 
  for stage_number,target in enumerate(PRACTICAL_STAGES,1):
   if target>=ctx:
    completed.append(f'  – {target//1024:>2}K   skipped (configured context {ctx//1024}K)')
    completed_count+=1
    continue
-
-  if rendered_lines:
-   clear_terminal_lines(rendered_lines)
-  rendered_lines=quick_progress_block(completed,completed_count,len(PRACTICAL_STAGES))
 
   try:
    result,reasons=practical_single(
@@ -113,15 +109,25 @@ def practical_bench(engine: Engine, prepared: PreparedModel, think):
    break
 
   result.suite_memory_start=suite_start; results.append(result); completed_count+=1
-  ui_verbose(f'  actual input {result.prompt_tokens:,} • output {result.output_tokens} tokens')
+  native=getattr(result,'_native_metrics',{}) or {}
+  verbose_evidence.append(
+   f'  ~{target//1024}K evidence • input={result.prompt_tokens:,}'
+   f' • load={result.load_s:.3f}s • TTFT={result.ttft_s:.3f}s'
+   f' • client_total={result.client_total_s:.3f}s'
+   f' • cached_prompt_tokens={result.cached_prompt_tokens}'
+   f' • fresh_prompt_cache={native.get("fresh_prompt_cache","n/a")}'
+  )
   completed.append(
    f'  ✓ {target//1024:>2}K   TTFT {human_duration(result.ttft_s):<9} '
    f'Prompt {result.prompt_tps:>5.0f} t/s   Decode {result.generation_tps:>4.0f} t/s'
   )
+  clear_terminal_lines(rendered_lines)
+  rendered_lines=quick_progress_block(completed,completed_count,len(PRACTICAL_STAGES))
 
   if reasons and stage_number<len(PRACTICAL_STAGES):
    clear_terminal_lines(rendered_lines)
-   rendered_lines=quick_progress_block(completed,completed_count,len(PRACTICAL_STAGES))
+   for line in completed: print(line)
+   rendered_lines=0
    print(); print(col('  ⚠ Memory-pressure advisory',Y)); print()
    latest=result.memory_after
    for key,label,unit in [('available_percent','Memory available','%'),('swap_used_mb','Swap',' MB'),('compressed_mb','Compressed',' MB')]:
@@ -138,6 +144,8 @@ def practical_bench(engine: Engine, prepared: PreparedModel, think):
  if rendered_lines:
   clear_terminal_lines(rendered_lines)
  quick_progress_block(completed,completed_count,len(PRACTICAL_STAGES))
+ for line in verbose_evidence:
+  ui_verbose(line)
  print()
  if completed_count == len(PRACTICAL_STAGES):
   print('  ✓ Practical benchmark complete')
@@ -153,7 +161,7 @@ def custom_bench(engine: Engine, base, model_contexts, think):
  print('  Workloads  ' + ' · '.join(f'~{fill//1024}K @ {prepared.configured_context//1024}K' for prepared,fill in model_contexts))
  print('  One isolated interaction per workload • 10% headroom by default')
  print()
- completed=[]; results=[]; done=0
+ completed=[]; results=[]; done=0; verbose_evidence=[]
  rendered=quick_progress_block(completed,done,len(model_contexts))
  for stage,(prepared,fill) in enumerate(model_contexts,1):
   clear_terminal_lines(rendered)
@@ -163,15 +171,29 @@ def custom_bench(engine: Engine, base, model_contexts, think):
    result.mode='Custom'; result.phase='Custom'
    results.append(result)
    done+=1; completed.append(custom_summary(result))
+   native=getattr(result,'_native_metrics',{}) or {}
+   verbose_evidence.append(
+    f'  ~{fill//1024}K @ {prepared.configured_context//1024}K evidence'
+    f' • input={result.prompt_tokens:,} • load={result.load_s:.3f}s'
+    f' • TTFT={result.ttft_s:.3f}s • cached_prompt_tokens={result.cached_prompt_tokens}'
+    f' • fresh_prompt_cache={native.get("fresh_prompt_cache","n/a")}'
+   )
    clear_terminal_lines(rendered)
    rendered=quick_progress_block(completed,done,len(model_contexts))
    if warning:
+    clear_terminal_lines(rendered); rendered=0
     print_pressure_warning(warning)
+    print()
+    rendered=quick_progress_block(completed,done,len(model_contexts))
   except Exception as e:
    clear_terminal_lines(rendered)
    print(col('  ✗ ',X)+f'Custom workload ~{fill//1024}K failed: {e}')
    rendered=quick_progress_block(completed,done,len(model_contexts))
- quick_progress_block(completed,done,len(model_contexts)) if not sys.stdout.isatty() or ui.NO_ANSI else None
+ if rendered:
+  clear_terminal_lines(rendered)
+ quick_progress_block(completed,done,len(model_contexts))
+ for line in verbose_evidence:
+  ui_verbose(line)
  print('\n'+col('✓ Custom benchmark complete',G))
  return results
 
@@ -194,7 +216,6 @@ def full_single(engine: Engine, prepared: PreparedModel, think,target_tokens,pha
   instruction="\n\nWrite a concise technical explanation of deterministic benchmarking, using approximately the available output budget."
   outcap=output_tokens
  request=GenerationRequest(prompt=corpus+instruction,max_output_tokens=outcap,reasoning=request_thinking)
- ui_verbose(f'  Generation • stream=true • target_input≈{target_tokens:,} • output_cap={outcap}')
  phase_label='Integrity check' if phase=='Long Prefill' else 'Decode test'
  with Spinner(f'{phase_label} • processing ~{target_tokens//1024}K input…') as status:
   def on_event(event):
@@ -210,21 +231,40 @@ def full_single(engine: Engine, prepared: PreparedModel, think,target_tokens,pha
  z=Result(base_model=base,model=model,context=ctx,mode=phase,run=trial_id,thinking=request_thinking,requested_fill=target_tokens,
   **fields,memory_before=before,memory_after=after,
   phase=phase,measured=True,isolated=True,stabilization_s=stabilization_s,checkpoint_pass=(hits==total) if total else None,checkpoint_hits=hits,checkpoint_total=total,benchmark_thinking=think)
+ attach_generation_evidence(z, generation)
  cr=(z.cached_prompt_tokens/z.prompt_tokens) if z.prompt_tokens else 0
  if cr>CACHE_ACCEPT_RATIO:z.error=f'cache {cr*100:.1f}% exceeds {CACHE_ACCEPT_RATIO*100:.0f}%'
  return z,pressure_warning(before,after)
 
 
-def full_bench(engine: Engine, prepared: PreparedModel, think):
+def full_bench(engine: Engine, prepared: PreparedModel, think, suite_status=None):
  base, model, ctx = prepared.model.id, prepared.id, prepared.configured_context
  print('\n'+col('Stress benchmark',B)); print()
  print(f'  {base} • context={ctx//1024}K • thinking={think}')
  print('  25% → 50% → 75% → 90% • isolated integrity + decode workloads')
  results=[]; suite_start=memory_snapshot()
+ if suite_status is not None:
+  suite_status.update({'completed_stages':0,'total_stages':4,'interrupted':False,'complete':False,'stop_reason':None})
+
  ui_verbose(col('  i ',C)+'Memory pressure policy: '+pressure_policy_description(sys.platform))
+ # Stress can run for a long time. Warn before calibration if the host already
+ # shows severe pressure; never silently alter the requested context.
+ preflight_reasons=[]
+ avail=suite_start.get('available_percent'); swap=suite_start.get('swap_used_mb')
+ if avail is not None and avail <= 10: preflight_reasons.append(f'available memory is only {avail:.0f}%')
+ if swap is not None and swap >= 8192: preflight_reasons.append(f'swap already in use is {swap/1024:.1f} GB')
+ if ctx >= 32768 and preflight_reasons:
+  print(); print(col('  ⚠ Stress preflight memory advisory',Y)); print()
+  for reason in preflight_reasons: print(f'    {reason}')
+  print('    Results may reflect substantial host swap/compression pressure.')
+  if input('\n    Continue with Stress? [y/N] ').strip().lower() not in ('y','yes'):
+   if suite_status is not None: suite_status['stop_reason']='preflight_memory_declined'
+   print('\n    Stress cancelled before calibration; no benchmark results were produced.')
+   return results
+  print()
  results.extend(quick_bench(engine,prepared,think,embedded=True))
 
- stages=[.25,.50,.75,.90]; completed_count=0; completed=[]; rendered_lines=0
+ stages=[.25,.50,.75,.90]; completed_count=0; completed=[]; rendered_lines=0; verbose_evidence=[]
  print()
 
  for si,fraction in enumerate(stages,1):
@@ -244,11 +284,40 @@ def full_bench(engine: Engine, prepared: PreparedModel, think):
    dec.suite_memory_start=suite_start; results.append(dec)
    reasons=list(dict.fromkeys(reasons+reasons2)); completed_count+=1
    completed.append(stress_stage_summary(target,pre,dec))
+   pre_native=getattr(pre,'_native_metrics',{}) or {}
+   dec_native=getattr(dec,'_native_metrics',{}) or {}
+   verbose_evidence.append(
+    f'  ~{target//1024}K integrity evidence • input={pre.prompt_tokens:,}'
+    f' • checkpoints={pre.checkpoint_hits}/{pre.checkpoint_total}'
+    f' • load={pre.load_s:.3f}s • cached_prompt_tokens={pre.cached_prompt_tokens}'
+    f' • fresh_prompt_cache={pre_native.get("fresh_prompt_cache","n/a")}'
+   )
+   verbose_evidence.append(
+    f'  ~{target//1024}K decode evidence • input={dec.prompt_tokens:,}'
+    f' • load={dec.load_s:.3f}s • TTFT={dec.ttft_s:.3f}s'
+    f' • cached_prompt_tokens={dec.cached_prompt_tokens}'
+    f' • fresh_prompt_cache={dec_native.get("fresh_prompt_cache","n/a")}'
+   )
+  except KeyboardInterrupt:
+   # A stage is atomic for reporting: keep only fully completed integrity+decode
+   # pairs. If Ctrl-C lands after integrity but before decode completes, discard
+   # that partial stage and preserve all earlier completed stages.
+   results=[r for r in results if not (r.phase in ('Long Prefill','Long Decode') and r.run in (100+si,200+si))]
+   clear_terminal_lines(rendered_lines+stage_extra)
+   rendered_lines=0
+   if suite_status is not None:
+    suite_status.update({'completed_stages':completed_count,'interrupted':True,'stop_reason':'keyboard_interrupt'})
+   print()
+   print(col('  ⚠ Stress benchmark interrupted',Y))
+   print(f'    Completed results preserved • {completed_count}/{len(stages)} stages complete')
+   break
   except Exception as e:
    clear_terminal_lines(rendered_lines+stage_extra)
    completed.append(col('  ✗ ',X)+str(e))
    stress_progress_block(completed,completed_count,len(stages))
    rendered_lines=0
+   if suite_status is not None:
+    suite_status.update({'completed_stages':completed_count,'stop_reason':'error'})
    break
 
   # Remove the previous progress block + stage heading, then redraw the canonical
@@ -257,13 +326,12 @@ def full_bench(engine: Engine, prepared: PreparedModel, think):
   rendered_lines=stress_progress_block(completed,completed_count,len(stages))
 
   if reasons and si<len(stages):
-   # A blocking warning ends the live progress region. Preserve completed rows as
-   # ordinary history so a second progress bar is never left on screen.
+   # Temporarily suspend the live Stress surface for the blocking warning.
+   # Completed stage rows remain renderer state and are not duplicated in history.
    if rendered_lines:
     clear_terminal_lines(rendered_lines)
-    for line in completed: print(line)
     rendered_lines=0
-   print(); print(col('  ⚠ Memory pressure detected',Y)); print()
+   print(col('  ⚠ Memory pressure detected',Y)); print()
    latest=dec.memory_after
    for k,label,unit in [('available_percent','Available memory','%'),('swap_used_mb','Swap',' MB'),('compressed_mb','Compressed',' MB')]:
     x=suite_start.get(k); y=latest.get(k)
@@ -272,13 +340,21 @@ def full_bench(engine: Engine, prepared: PreparedModel, think):
    if latest.get('psi_memory_full_avg10') is not None: print(f"    Severe stalls      {latest['psi_memory_full_avg10']:.2f}%")
    print(f'\n    Next workload: ~{int(ctx*stages[si])//1024}K')
    if input('    Continue? [y/N] ').strip().lower() not in ('y','yes'):
+    if suite_status is not None:
+     suite_status.update({'completed_stages':completed_count,'stop_reason':'memory_pressure_declined'})
     print('\n    Stopped by user; completed results are preserved.'); rendered_lines=0; break
-   print(); rendered_lines=0
+   print()
+   rendered_lines=stress_progress_block(completed,completed_count,len(stages))
 
  if rendered_lines:
   clear_terminal_lines(rendered_lines)
  stress_progress_block(completed,completed_count,len(stages))
+ for line in verbose_evidence:
+  ui_verbose(line)
  print()
+ if suite_status is not None:
+  suite_status['completed_stages']=completed_count
+  suite_status['complete']=(completed_count==len(stages))
  if completed_count == len(stages):
   print('  ✓ Stress benchmark complete')
  else:

@@ -130,6 +130,12 @@ class CliTests(unittest.TestCase):
         self.assertEqual(engine.prepared[0].configured_context, 32768)
         self.assertEqual(engine.released, engine.prepared)
 
+    def test_yes_accepts_quick_unknown_context_without_prompt(self):
+        engine = FakeEngine(context=None)
+        self.invoke(engine, ['--mode', 'quick', '--models', 'test-model', '--thinking', 'false', '--yes'])
+        self.assertEqual(engine.prepared[0].configured_context, 32768)
+        self.assertEqual(engine.released, engine.prepared)
+
     def test_quick_and_stress_declining_preparation_skip_work(self):
         for mode in ('quick', 'stress'):
             with self.subTest(mode=mode):
@@ -161,11 +167,87 @@ class CliTests(unittest.TestCase):
                 self.assertEqual(engine.released, list(reversed(engine.prepared)))
                 self.assertTrue(engine.released)
 
+    def test_engine_display_name_preserves_mlx_lm_branding(self):
+        self.assertEqual(legacy.engine_display_name('mlx-lm'), 'MLX-LM')
+        self.assertEqual(legacy.engine_display_name('ollama'), 'Ollama')
+
     def test_recovered_size_parser_retains_released_k_m_and_bare_value_semantics(self):
         self.assertEqual(legacy.parsevals('32,64k,131072,1m'), [32768,65536,131072,1048576])
         with self.assertRaises(SystemExit):
             legacy.parsevals('broken')
 
+    def test_mlx_smoke_uses_production_contract_without_benchmark_methodology(self):
+        engine = FakeEngine()
+        engine.name = 'mlx-lm'
+        engine.info = ModelInfo('mlx-lm', 'test-model', 'Test model', quantization='NVFP4',
+                                advertised_context=131072, configured_context=None,
+                                reasoning_modes=('false','low','medium','xhigh'))
+        with tempfile.TemporaryDirectory() as directory, ExitStack() as stack:
+            output = io.StringIO()
+            stack.enter_context(redirect_stdout(output))
+            stack.enter_context(patch.object(legacy, 'ENGINE', engine))
+            stack.enter_context(patch.object(legacy, 'hardware', return_value=HARDWARE))
+            stack.enter_context(patch.object(legacy, 'Path', side_effect=lambda name: Path(directory) / name))
+            stack.enter_context(patch('sys.argv', ['devbits-bench', '--engine', 'mlx-lm', '--mlx-smoke',
+                                                   '--models', 'test-model', '--no-ansi']))
+            stack.enter_context(patch.object(terminal, 'NO_ANSI', True))
+            stack.enter_context(patch.object(terminal, 'VERBOSE', False))
+            legacy.main()
+            self.assertEqual(len(engine.prepared), 1)
+            self.assertEqual(engine.prepared[0].configured_context, 32768)
+            self.assertEqual(len(engine.requests), 1)
+            request = engine.requests[0][1]
+            self.assertEqual(request.prompt, 'Reply with exactly: DEVBITS MLX OK')
+            self.assertEqual(request.max_output_tokens, 32)
+            self.assertEqual(request.reasoning, 'false')
+            self.assertEqual(request.seed, 42)
+            self.assertEqual(request.temperature, 0)
+            self.assertEqual(engine.resets, [])
+            self.assertEqual(engine.released, engine.prepared)
+            self.assertEqual(list(Path(directory).glob('*.json')), [])
+            self.assertEqual(list(Path(directory).glob('*.md')), [])
+            self.assertIn('5B-3A acceptance generation completed.', output.getvalue())
+
+    def test_mlx_controls_uses_one_resident_model_and_control_matrix(self):
+        engine = FakeEngine()
+        engine.name = 'mlx-lm'
+        engine.info = ModelInfo('mlx-lm', 'test-model', 'Test model', quantization='NVFP4',
+                                advertised_context=131072, configured_context=None,
+                                reasoning_modes=('false','low','medium','xhigh'))
+        # Supply the native invariants consumed by the acceptance harness.
+        original_generate = engine.generate
+        def generate(prepared, request, on_event=None):
+            result = original_generate(prepared, request, on_event)
+            return GenerationResult(result.metrics, thinking_text=('reason' if request.reasoning != 'false' else ''),
+                                    answer_text=('42' if request.reasoning != 'false' else 'DEVBITS CONTROL OK'),
+                                    requested_reasoning=request.reasoning, effective_reasoning=request.reasoning,
+                                    native_metrics={'fresh_prompt_cache': True, 'finish_reason': 'length' if request.max_output_tokens == 1 else 'stop'})
+        engine.generate = generate
+        with tempfile.TemporaryDirectory() as directory, ExitStack() as stack:
+            output = io.StringIO(); stack.enter_context(redirect_stdout(output))
+            stack.enter_context(patch.object(legacy, 'ENGINE', engine))
+            stack.enter_context(patch.object(legacy, 'hardware', return_value=HARDWARE))
+            stack.enter_context(patch.object(legacy, 'Path', side_effect=lambda name: Path(directory) / name))
+            stack.enter_context(patch('sys.argv', ['devbits-bench', '--engine', 'mlx-lm', '--mlx-controls', '--models', 'test-model', '--no-ansi']))
+            stack.enter_context(patch.object(terminal, 'NO_ANSI', True)); stack.enter_context(patch.object(terminal, 'VERBOSE', False))
+            legacy.main()
+        self.assertEqual(len(engine.prepared), 1)
+        self.assertEqual(len(engine.requests), 6)
+        self.assertEqual([r.reasoning for _,r in engine.requests], ['false','false','false','low','medium','xhigh'])
+        self.assertEqual([r.max_output_tokens for _,r in engine.requests], [32,32,1,96,96,128])
+        self.assertTrue(all(r.seed == 42 and r.temperature == 0 for _,r in engine.requests))
+        self.assertEqual(engine.released, engine.prepared)
+        self.assertIn('Deterministic replay   True', output.getvalue())
+        self.assertIn('5B-3B generation controls completed.', output.getvalue())
+
+    def test_mlx_smoke_rejects_non_mlx_engine(self):
+        engine = FakeEngine()
+        with patch.object(legacy, 'ENGINE', engine), \
+             patch.object(legacy, 'hardware', return_value=HARDWARE), \
+             patch('sys.argv', ['devbits-bench', '--mlx-smoke', '--models', 'test-model', '--no-ansi']), \
+             patch.object(terminal, 'NO_ANSI', True), patch.object(terminal, 'VERBOSE', False):
+            with self.assertRaisesRegex(SystemExit, 'requires --engine mlx-lm'):
+                legacy.main()
 
 if __name__ == '__main__':
     unittest.main()

@@ -3,8 +3,10 @@ from .base import (
     ModelInfo, PreparedModel,
 )
 from .ollama import OllamaEngine
+from .discovery import EngineCandidate, discover_available_engines, supported_engine_candidates
 
 __all__ = [
     "Engine", "EngineInfo", "GenerationMetrics", "GenerationRequest", "GenerationResult",
-    "ModelInfo", "PreparedModel", "OllamaEngine",
+    "ModelInfo", "PreparedModel", "OllamaEngine", "EngineCandidate",
+    "discover_available_engines", "supported_engine_candidates",
 ]

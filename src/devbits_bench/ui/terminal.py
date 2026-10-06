@@ -73,23 +73,42 @@ def progress_bar(done,total,width=24):
 
 
 class LiveRegion:
- """Own a redrawable terminal region without callers counting cursor lines."""
+ """Own an ANSI terminal region from a stable saved cursor anchor.
+
+ The anchor is independent of whatever transient spinner/status line is written
+ below the region.  Redraws restore the anchor and clear downward instead of
+ trying to infer cursor position from previously printed line counts.
+ """
  def __init__(self):
+  self.anchored=False
   self.lines=0
 
+ def _anchor(self):
+  if sys.stdout.isatty() and not NO_ANSI and not self.anchored:
+   sys.stdout.write('\033[s'); sys.stdout.flush()
+   self.anchored=True
+
  def render(self,lines):
-  self.clear()
+  if sys.stdout.isatty() and not NO_ANSI:
+   self._anchor()
+   sys.stdout.write('\033[u\033[J')
+   sys.stdout.flush()
+   for line in lines:
+    print(line)
+   self.lines=len(lines)
+   return
   for line in lines:
    print(line)
   self.lines=len(lines)
 
  def clear(self):
-  if self.lines:
-   clear_terminal_lines(self.lines)
-   self.lines=0
+  if sys.stdout.isatty() and not NO_ANSI and self.anchored:
+   sys.stdout.write('\033[u\033[J'); sys.stdout.flush()
+  self.lines=0
 
  def finish(self,lines):
   self.render(lines)
+  self.anchored=False
   self.lines=0
 
 
@@ -102,18 +121,9 @@ def progress_lines(completed,done,total):
 
 
 def clear_terminal_lines(count):
- """Erase the previous ``count`` printed terminal lines.
-
- ``print()`` leaves the cursor on the line *after* the rendered region.  The old
- implementation counted that empty cursor line as one of the lines to erase,
- which left the oldest progress-bar row behind on every redraw.  Repeated
- redraws therefore accumulated the visible staircase.
- """
+ """Erase the previous ``count`` printed terminal lines."""
  if count <= 0 or not sys.stdout.isatty() or NO_ANSI:
   return
- # Discard anything transient on the current cursor line, then erase exactly
- # ``count`` previously printed lines.  Finish at the top of the erased region
- # so the replacement block is written in-place.
  sys.stdout.write('\r\033[2K')
  for _ in range(count):
   sys.stdout.write('\033[1A\r\033[2K')
@@ -121,13 +131,11 @@ def clear_terminal_lines(count):
 
 
 def quick_progress_block(completed, done, total):
- """Render Quick's single progress bar plus already-completed steps."""
- print(f'  {progress_bar(done,total)}  {done}/{total}')
- print()
- for line in completed:
+ """Render the historical compact Quick progress block."""
+ lines=progress_lines(completed,done,total)
+ for line in lines:
   print(line)
- # Spinner/status owns the next terminal line.
- return 2 + len(completed)
+ return len(lines)
 
 
 def stress_progress_block(completed, done, total):
