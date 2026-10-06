@@ -18,16 +18,27 @@ If you cloned the repository:
 ./devbits-bench
 ```
 
-Or, if you installed Devbits Bench as a command:
+That's it.
+
+Devbits Bench detects the engines and models available on your machine and walks
+you through the rest.
+
+### Run it from anywhere
+
+If you'd rather use `devbits-bench` as a normal command, install the cloned
+project once:
+
+```bash
+python3 -m pip install .
+```
+
+Then you can run:
 
 ```bash
 devbits-bench
 ```
 
-That's it.
-
-Devbits Bench detects the engines and models available on your machine and walks
-you through the rest.
+from any directory.
 
 > You should already have the local inference engine and models you want to test
 > installed. Devbits Bench currently supports **Ollama** and **MLX-LM**.
